@@ -15,9 +15,9 @@ FROM ubuntu:22.04
 
 WORKDIR /tmp
 
-COPY --from=build-env /build/slurm-smd_24.05.1-1_amd64.deb /tmp/
-COPY --from=build-env /build/slurm-smd-slurmd_24.05.1-1_amd64.deb /tmp/
-COPY --from=build-env /build/slurm-smd-client_24.05.1-1_amd64.deb /tmp/
+COPY --from=build-env /build/slurm-smd_24.05.1-1_*.deb /tmp/
+COPY --from=build-env /build/slurm-smd-slurmd_24.05.1-1_*.deb /tmp/
+COPY --from=build-env /build/slurm-smd-client_24.05.1-1_*.deb /tmp/
 
 RUN apt-get update && apt-get install -y /tmp/*.deb && \
     rm /tmp/*.deb && \
