@@ -1,0 +1,39 @@
+services:
+  slurm_master:
+    image: slurm_master
+    hostname: slurm_master
+    user: admin
+    volumes:
+      - slurm_vol:/home/admin
+      #- /home/venom/repo/slurm-docker/etc/passwd:/etc/passwd
+      #- /home/venom/repo/slurm-docker/etc/shadow:/etc/shadow
+    ports:
+      - 6817:6817
+      - 6818:6818
+      - 6819:6819
+  slurm_worker_1:
+    image: slurm_worker
+    hostname: slurm_worker_1
+    user: admin
+    volumes:
+      - slurm_vol:/home/admin
+      #- /home/venom/repo/slurm-docker/etc/passwd:/etc/passwd
+      #- /home/venom/repo/slurm-docker/etc/shadow:/etc/shadow
+    environment:
+      - SLURM_NODENAME=slurm_worker_1
+    depends_on:
+      - slurm_master
+  slurm_worker_2:
+    image: slurm_worker
+    hostname: slurm_worker_2
+    user: admin
+    volumes:
+      - slurm_vol:/home/admin
+      #- /home/venom/repo/slurm-docker/etc/passwd:/etc/passwd
+      #- /home/venom/repo/slurm-docker/etc/shadow:/etc/shadow
+    environment:
+      - SLURM_NODENAME=slurm_worker_2
+    depends_on:
+      - slurm_master
+volumes:
+  slurm_vol:

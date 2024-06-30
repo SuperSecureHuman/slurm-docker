@@ -1,0 +1,27 @@
+version: '3.8' # ensure the version supports Docker Swarm features
+
+services:
+  slurm_master:
+    image: slurm_master
+    hostname: slurm-master
+    user: admin
+    volumes:
+      - /gfsv/home:/home/
+
+  slurm_worker_1:
+    image: slurm_worker
+    hostname: slurm-worker-1
+    user: admin
+    volumes:
+      - /gfsv/home:/home/
+    environment:
+      - SLURM_NODENAME=slurm-worker-1
+
+  slurm_worker_2:
+    image: slurm_worker
+    hostname: slurm-worker-2
+    user: admin
+    volumes:
+      - /gfsv/home:/home/
+    environment:
+      - SLURM_NODENAME=slurm-worker-2
