@@ -29,7 +29,7 @@ RUN echo "ldap-auth-config ldap-auth-config/dbrootlogin boolean false" |debconf-
     echo "ldap-auth-config ldap-auth-config/dblogin boolean false" | debconf-set-selections
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    libnss-ldap libpam-ldap ldap-utils nscd
+    libnss-ldap libpam-ldap ldap-utils nscd ldap-auth-config
 
 RUN auth-client-config -t nss -p lac_ldap && \
     echo "session required    pam_mkhomedir.so skel=/etc/skel umask=0022" >> /etc/pam.d/common-session && \
