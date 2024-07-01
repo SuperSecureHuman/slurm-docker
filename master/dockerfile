@@ -31,8 +31,8 @@ RUN echo "ldap-auth-config ldap-auth-config/dbrootlogin boolean false" |debconf-
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libnss-ldap libpam-ldap ldap-utils nscd ldap-auth-config
 
-RUN auth-client-config -t nss -p lac_ldap && \
-    echo "session required    pam_mkhomedir.so skel=/etc/skel umask=0022" >> /etc/pam.d/common-session && \
+#RUN auth-client-config -t nss -p lac_ldap && \
+RUN    echo "session required    pam_mkhomedir.so skel=/etc/skel umask=0022" >> /etc/pam.d/common-session && \
     /etc/init.d/nscd restart
 
 RUN sed -i 's/^passwd:.*/& ldap/' /etc/nsswitch.conf && \
