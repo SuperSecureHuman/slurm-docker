@@ -9,7 +9,7 @@ RUN useradd -m admin -s /usr/bin/bash -d /home/admin && echo "admin:admin" | chp
 RUN echo 'OPTIONS="--force --key-file /etc/munge/munge.key"' > /etc/default/munge
 
 COPY slurm.conf /etc/slurm/
-#   COPY cgroup.conf /etc/slurm/
+COPY cgroup.conf /etc/slurm/
 COPY docker-entrypoint.sh /etc/slurm/
 
 
@@ -19,20 +19,20 @@ ENV ldap_ip='192.168.0.210'
 
 #Configure LDAP 
 RUN echo "ldap-auth-config ldap-auth-config/dbrootlogin boolean false" |debconf-set-selections && \
-	echo "ldap-auth-config ldap-auth-config/pam_password select md5" |debconf-set-selections && \
-	echo "ldap-auth-config ldap-auth-config/move-to-debconf boolean true" |debconf-set-selections && \
-	echo "ldap-auth-config ldap-auth-config/ldapns/ldap-server string ldap://$ldap_ip" |debconf-set-selections && \
-	echo "ldap-auth-config ldap-auth-config/ldapns/base-dn string $dn" |debconf-set-selections && \
-	echo "ldap-auth-config ldap-auth-config/override boolean true" |debconf-set-selections && \
-	echo "ldap-auth-config ldap-auth-config/ldapns/ldap_version select 3" |debconf-set-selections && \
-	echo "ldap-auth-config ldap-auth-config/dblogin boolean false" | debconf-set-selections
+    echo "ldap-auth-config ldap-auth-config/pam_password select md5" |debconf-set-selections && \
+    echo "ldap-auth-config ldap-auth-config/move-to-debconf boolean true" |debconf-set-selections && \
+    echo "ldap-auth-config ldap-auth-config/ldapns/ldap-server string ldap://$ldap_ip" |debconf-set-selections && \
+    echo "ldap-auth-config ldap-auth-config/ldapns/base-dn string $dn" |debconf-set-selections && \
+    echo "ldap-auth-config ldap-auth-config/override boolean true" |debconf-set-selections && \
+    echo "ldap-auth-config ldap-auth-config/ldapns/ldap_version select 3" |debconf-set-selections && \
+    echo "ldap-auth-config ldap-auth-config/dblogin boolean false" | debconf-set-selections
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libnss-ldap libpam-ldap ldap-utils nscd
 
-    RUN auth-client-config -t nss -p lac_ldap && \
-	echo "session required    pam_mkhomedir.so skel=/etc/skel umask=0022" >> /etc/pam.d/common-session && \
-	/etc/init.d/nscd restart
+RUN auth-client-config -t nss -p lac_ldap && \
+    echo "session required    pam_mkhomedir.so skel=/etc/skel umask=0022" >> /etc/pam.d/common-session && \
+    /etc/init.d/nscd restart
 
 RUN sed -i 's/^passwd:.*/& ldap/' /etc/nsswitch.conf && \
     sed -i 's/^group:.*/& ldap/' /etc/nsswitch.conf && \
